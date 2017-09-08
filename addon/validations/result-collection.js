@@ -250,8 +250,8 @@ export default Ember.ArrayProxy.extend({
    * @readOnly
    * @type {Array}
    */
-  warnings: computed('attribute', '_warningContent.@each.errors', cycleBreaker(function() {
-    return computeErrorCollection(get(this, 'attribute'), get(this, '_warningContent'));
+  warnings: computed('attribute', '_warningContent.@each.warnings', cycleBreaker(function() {
+    return computeErrorCollection(get(this, 'attribute'), get(this, '_warningContent'), "warnings");
   })).readOnly(),
 
   /**
@@ -350,10 +350,10 @@ export default Ember.ArrayProxy.extend({
   })).readOnly(),
 
   /**
-  * @property _contentValidations
-  * @type {Array}
-  * @private
-  */
+   * @property _contentValidations
+   * @type {Array}
+   * @private
+   */
   _contentValidations: computed('content.@each._validations', function() {
     return emberArray(compact(this.getEach('_validations')));
   }).readOnly(),
@@ -380,8 +380,8 @@ export default Ember.ArrayProxy.extend({
   _warningContent: computed.filterBy('content', 'isWarning', true).readOnly()
 });
 
-function computeErrorCollection(attribute, content = []) {
-  let errors = flatten(content.getEach('errors'));
+function computeErrorCollection(attribute, content = [], errorProperty="errors") {
+  let errors = flatten(content.getEach(errorProperty));
 
   errors = uniq(compact(errors));
   errors.forEach((e) => {
